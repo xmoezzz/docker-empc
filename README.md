@@ -1,5 +1,5 @@
-## *Empc*: Effective Path Prioritization for Symbolic Execution with Path Cover
-*Empc* is a path prioritization method using path cover to deal with path explosion problem in symbolic execution. It improves code coverage and meanwhile reduces the number of execution states and memory usage. *Empc* is instantiated on [KLEE](https://klee-se.org) version 3.1. Please refer to [*Empc* paper (S&P '25)](https://doi.ieeecomputersociety.org/10.1109/SP61157.2025.00190).
+## *Empc*: Effective Path Prioritization for Symbolic Execution with Path Cover (S&P '25)
+*Empc* is a path prioritization method using path cover to deal with path explosion problem in symbolic execution. It improves code coverage and meanwhile reduces the number of execution states and memory usage. *Empc* is instantiated on [KLEE](https://klee-se.org) version 3.1. Please refer to [*Empc* paper (S&P '25)](https://arxiv.org/pdf/2505.03555).
 
 ### Build
 
