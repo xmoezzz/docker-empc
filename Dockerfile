@@ -1,5 +1,5 @@
 # KLEE toolchain with LLVM/Clang 13 from apt.llvm.org (no LLVM build)
-FROM ubuntu:20.04
+FROM ubuntu:18.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC LANG=C.UTF-8
@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates curl wget gnupg xz-utils unzip file \
     build-essential ninja-build cmake pkg-config \
     python3 python3-pip python3-setuptools python3-venv \
-    z3 libz3-dev lsb-release \
+    z3 libz3-dev lsb-release libncurses5-dev \
     libcap-dev software-properties-common git zlib1g-dev libsqlite3-dev \
     libboost-program-options-dev libboost-filesystem-dev libboost-system-dev \
     flex bison texinfo \
@@ -27,6 +27,23 @@ ENV CC=clang-13 CXX=clang++-13 \
 
 # Python tools (lit, wllvm/extract-bc)
 RUN python3 -m pip install --no-cache-dir lit wllvm
+
+RUN apt-get update && apt-get install -y software-properties-common \
+    && add-apt-repository ppa:ubuntu-toolchain-r/test -y \
+    && apt-get update && apt-get install -y gcc-10 g++-10 \
+    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100 \
+    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 100
+
+RUN apt-get update && apt-get install -y wget gpg \
+    && wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
+       | gpg --dearmor -o /usr/share/keyrings/kitware-archive-keyring.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ bionic main" \
+       > /etc/apt/sources.list.d/kitware.list \
+    && apt-get update \
+    && apt-get install -y cmake \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 
 # Install prefix
 ENV APP_PREFIX=/app
