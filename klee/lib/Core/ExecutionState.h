@@ -187,6 +187,8 @@ public:
   /// state
   std::uint32_t depth = 0;
 
+  std::uint64_t pathSteps = 0;
+
   /// @brief Address space used by this state (e.g. Global and Heap)
   AddressSpace addressSpace;
 

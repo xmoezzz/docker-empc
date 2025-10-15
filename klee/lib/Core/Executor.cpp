@@ -2194,6 +2194,20 @@ Function *Executor::getTargetFunction(Value *calledVal) {
 
 void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
   Instruction *i = ki->inst;
+
+  if (state.prevPC && state.prevPC->inst && state.prevPC->inst->getParent() != i->getParent()) {
+    state.pathSteps++;
+  }
+  else if (auto *cb = dyn_cast<CallBase>(i)) {
+    const Function *cf = cb->getCalledFunction();
+    if (!cf || !cf->isDeclaration()) {
+      state.pathSteps++;
+    }
+  }
+  else if (i->getOpcode() == Instruction::Ret) {
+    state.pathSteps++;
+  }
+
   switch (i->getOpcode()) {
     // Control flow
   case Instruction::Ret: {
@@ -4027,6 +4041,14 @@ void Executor::terminateStateOnError(ExecutionState &state,
   Instruction *lastInst;
   const InstructionInfo &ii =
       getLastNonKleeInternalInstruction(state, &lastInst);
+
+  std::string stepsPath = interpreterHandler->getOutputFilename("steps"); // matches current test prefix
+  std::error_code ec;
+  llvm::raw_fd_ostream os(stepsPath, ec, llvm::sys::fs::OF_Text);
+  if (!ec) {
+    os << state.pathSteps << "\n";
+    os.flush();
+  }
 
   if (EmitAllErrors ||
       emittedErrors.insert(std::make_pair(lastInst, message)).second) {
