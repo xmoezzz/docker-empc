@@ -38,6 +38,7 @@ public:
 
   virtual llvm::raw_ostream &getInfoStream() const = 0;
 
+  virtual unsigned getCurrentTestIndex() const = 0;
   virtual std::string getOutputFilename(const std::string &filename) = 0;
   virtual std::unique_ptr<llvm::raw_fd_ostream>
   openOutputFile(const std::string &filename) = 0;

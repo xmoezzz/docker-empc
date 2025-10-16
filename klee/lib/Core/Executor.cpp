@@ -4031,6 +4031,13 @@ bool shouldExitOn(StateTerminationType reason) {
   return it != ExitOnErrorType.end();
 }
 
+std::string getStepFilename(llvm::StringRef ext, unsigned index) {
+  char name[64];
+  snprintf(name, sizeof(name), "test%06u.%s", index,
+           ext.str().c_str());
+  return std::string(name);
+}
+
 void Executor::terminateStateOnError(ExecutionState &state,
                                      const llvm::Twine &messaget,
                                      StateTerminationType terminationType,
@@ -4042,7 +4049,9 @@ void Executor::terminateStateOnError(ExecutionState &state,
   const InstructionInfo &ii =
       getLastNonKleeInternalInstruction(state, &lastInst);
 
-  std::string stepsPath = interpreterHandler->getOutputFilename("steps"); // matches current test prefix
+  auto stepName = getStepFilename("steps", interpreterHandler->getCurrentTestIndex());
+  // dump the steps on err
+  std::string stepsPath = interpreterHandler->getOutputFilename(stepName); // matches current test prefix
   std::error_code ec;
   llvm::raw_fd_ostream os(stepsPath, ec, llvm::sys::fs::OF_Text);
   if (!ec) {

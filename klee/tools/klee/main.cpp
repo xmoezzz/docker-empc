@@ -301,6 +301,10 @@ public:
   ~KleeHandler();
 
   llvm::raw_ostream &getInfoStream() const { return *m_infoFile; }
+  unsigned getCurrentTestIndex() const override {
+    return m_numTotalTests; // this is the same counter used in processTestCase()
+  }
+
   /// Returns the number of test cases successfully generated so far
   unsigned getNumTestCases() { return m_numGeneratedTests; }
   unsigned getNumPathsCompleted() { return m_pathsCompleted; }
