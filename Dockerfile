@@ -87,6 +87,7 @@ RUN cmake -G Ninja \
 ENV KLEE_RUNTIME_BUILD="${APP_PREFIX}/lib/klee/runtime" \
     KLEE_INCLUDE_PATH="${APP_PREFIX}/include/klee"
 
-RUN pip3 install tabulate
+RUN pip3 install tabulate gcovr
+RUN apt update && apt install gdb -y
 
 WORKDIR /work
