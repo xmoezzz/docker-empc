@@ -67,7 +67,6 @@ COPY klee/ /src/klee/
 
 # Configure, build, install KLEE (assertions OFF to match distro LLVM)
 WORKDIR /src/klee/build
-ENV SAN_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer -fno-common -fno-sanitize-recover=all"
 RUN cmake -G Ninja \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=${APP_PREFIX} \
@@ -81,10 +80,6 @@ RUN cmake -G Ninja \
     -DENABLE_TCMALLOC=OFF \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
-    -DCMAKE_C_FLAGS="$SAN_FLAGS" \
-    -DCMAKE_CXX_FLAGS="$SAN_FLAGS" \
-    -DCMAKE_EXE_LINKER_FLAGS="$SAN_FLAGS" \
-    -DCMAKE_SHARED_LINKER_FLAGS="$SAN_FLAGS" \
     .. \
  && ninja -j"$(nproc)" \
  && ninja install \
