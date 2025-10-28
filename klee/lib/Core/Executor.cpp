@@ -4070,6 +4070,28 @@ void Executor::terminateStateOnError(ExecutionState &state,
       os.flush();
     }
 
+    using namespace std::chrono;
+    auto now_tp = system_clock::now();
+    std::time_t now_tt = system_clock::to_time_t(now_tp);
+    std::tm *now_tm = std::localtime(&now_tt);
+
+    char buf[64];
+    if (now_tm) {
+      std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", now_tm);
+    } else {
+      std::snprintf(buf, sizeof(buf), "unknown-time");
+    }
+
+    double ut = time::getUserTime().toSeconds();
+    auto p = time::getWallTime().point;
+    auto wt = std::chrono::duration_cast<std::chrono::seconds>(p.time_since_epoch()).count();
+
+    llvm::errs()
+      << "[KLEE_ERR] time=" << buf
+      << " UserTime(s)=" << ut
+      << " WallTime(s)=" << wt
+      << "\n";
+
     std::string MsgString;
     llvm::raw_string_ostream msg(MsgString);
     msg << "Error: " << message << '\n';
