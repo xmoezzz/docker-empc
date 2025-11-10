@@ -476,10 +476,14 @@ extern "C" void __ubsan_handle_nullability_arg_abort(NonNullArgData *Data) {
 static void handlePointerOverflowImpl(PointerOverflowData * /*Data*/,
                                       ValueHandle Base, ValueHandle Result) {
   ErrorType ET;
-  if (Base == 0 && Result == 0)
-    ET = ErrorType::NullptrWithOffset;
-  else if (Base == 0 && Result != 0)
-    ET = ErrorType::NullptrWithNonZeroOffset;
+  if (Base == 0 && Result == 0) {
+    return;
+  }
+    // ET = ErrorType::NullptrWithOffset;
+  else if (Base == 0 && Result != 0) {
+    return;
+  }
+    // ET = ErrorType::NullptrWithNonZeroOffset;
   else if (Base != 0 && Result == 0)
     ET = ErrorType::NullptrAfterNonZeroOffset;
   else

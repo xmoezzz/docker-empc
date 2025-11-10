@@ -1537,8 +1537,10 @@ void Executor::stepInstruction(ExecutionState &state) {
   state.prevPC = state.pc;
   ++state.pc;
 
-  if (stats::instructions == MaxInstructions)
+  if (stats::instructions == MaxInstructions) {
+    llvm::errs() << "[DEBUG] max inst";
     haltExecution = true;
+  }
 }
 
 static inline const llvm::fltSemantics *fpWidthToSemantics(unsigned width) {
@@ -3840,6 +3842,10 @@ void Executor::run(ExecutionState &initialState) {
   delete searcher;
   searcher = nullptr;
 
+  llvm::errs() << "[KLEE SUMMARY] total=" << states.size()
+             << ", haltExecution=" << haltExecution
+             << "\n";
+
   doDumpStates();
 }
 
@@ -4084,12 +4090,14 @@ void Executor::terminateStateOnError(ExecutionState &state,
 
     double ut = time::getUserTime().toSeconds();
     auto p = time::getWallTime().point;
-    auto wt = std::chrono::duration_cast<std::chrono::seconds>(p.time_since_epoch()).count();
+
+    time::Span elapsedTime(klee::time::getWallTime() - startWallTime);
+    auto elapsedTimeCount = elapsedTime.toMicroseconds();
 
     llvm::errs()
       << "[KLEE_ERR] time=" << buf
       << " UserTime(s)=" << ut
-      << " WallTime(s)=" << wt
+      << " WallTime(s)=" << elapsedTimeCount / 1000000U << "."  << (elapsedTimeCount % 1000000U) / 100000U
       << "\n";
 
     std::string MsgString;

@@ -24,7 +24,7 @@ void klee_overshift_check(unsigned long long bitWidth, unsigned long long shift)
      * we should generate a test case but carry
      * on executing the state with a warning?
      */
-    klee_report_error("IGNORED", 0 /*Ignored */, "overshift error", "overshift.err");
+    // klee_report_error("IGNORED", 0 /*Ignored */, "overshift error", "overshift.err");
   }
 }
 
