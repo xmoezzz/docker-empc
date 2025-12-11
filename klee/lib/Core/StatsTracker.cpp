@@ -48,9 +48,15 @@ DISABLE_WARNING_POP
 
 #include <fstream>
 #include <unistd.h>
+#include <thread>
+#include <atomic>
+#include <mutex>
 
 using namespace klee;
 using namespace llvm;
+
+static std::atomic<bool> statsThreadRunning{true};
+static std::mutex bcStatsMutex;
 
 ///
 
@@ -241,6 +247,18 @@ StatsTracker::StatsTracker(Executor &_executor, std::string _objectFilename,
       if (bcStatsWriteInterval)
         executor.timers.add(std::make_unique<Timer>(bcStatsWriteInterval,
                                                     [&] { writeBCStats(); }));
+
+      std::thread([&]() {
+        while (statsThreadRunning) {
+          std::this_thread::sleep_for(std::chrono::duration<double>(bcStatsWriteInterval.toSeconds()));
+          if (!statsThreadRunning) break;
+
+          {
+            std::lock_guard<std::mutex> lock(bcStatsMutex);
+            writeBCStats();
+          }
+        }
+        }).detach();
     } else {
       klee_error("Unable to open block coverage stats file (run.bcstats).");
     }
@@ -339,6 +357,8 @@ StatsTracker::~StatsTracker() {
     sqlite3_finalize(insertStmt);
     sqlite3_close(statsFile);
   }
+
+  statsThreadRunning = false;
 }
 
 void StatsTracker::done() {
