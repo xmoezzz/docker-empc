@@ -58,7 +58,6 @@
   <component name="ChangeListManager">
     <list default="true" id="2a337bfd-257e-4b8f-9e89-9a2cbeb8ca05" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Core/StatsTracker.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Core/StatsTracker.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,6 +144,11 @@
       </method>
     </configuration>
     <configuration name="UBSan" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="KLEE" TARGET_NAME="UBSan" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -306,7 +310,7 @@
       <workItem from="1762502408449" duration="6730000" />
       <workItem from="1762585153842" duration="4095000" />
       <workItem from="1762734121182" duration="18849000" />
-      <workItem from="1765433397432" duration="1478000" />
+      <workItem from="1765433397432" duration="2221000" />
     </task>
     <servers />
   </component>
