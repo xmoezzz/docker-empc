@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t xmoe/empc .
+docker build -t empc .
